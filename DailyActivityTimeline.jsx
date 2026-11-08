@@ -1,45 +1,5 @@
 import { useEffect, useState } from 'react';
-
-export function groupPapersByDate(papers) {
-  return papers.reduce((groups, paper) => {
-    const timestamp = new Date(paper.created_at);
-    if (Number.isNaN(timestamp.getTime())) return groups;
-
-    const date = timestamp.toLocaleDateString(undefined, {
-      timeZone: 'Asia/Kolkata',
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-    const uploaderId = paper.uploaded_by ?? 'unknown';
-    const joinedUploaderName = (
-      Array.isArray(paper.team_users)
-        ? paper.team_users[0]?.full_name
-        : paper.team_users?.full_name
-    )?.trim();
-    const uploaderName = joinedUploaderName || 'Team Member';
-
-    if (!groups[date]) {
-      groups[date] = { uploaders: [], papers: [], latestTimestamp: timestamp.getTime() };
-    }
-    groups[date].latestTimestamp = Math.max(groups[date].latestTimestamp, timestamp.getTime());
-
-    if (!groups[date].uploaders.some((item) => item.id === uploaderId)) {
-      groups[date].uploaders.push({ id: uploaderId, fullName: uploaderName });
-    }
-
-    groups[date].papers.push({
-      id: paper.id,
-      uploaded_by: paper.uploaded_by,
-      title: paper.title || 'Untitled paper',
-      methodology: paper.methodology || 'No methodology summary is available.',
-      pdf_url: paper.pdf_url,
-      read_by: paper.read_by || [],
-      uploaderName,
-    });
-    return groups;
-  }, {});
-}
+import { groupPapersByDate } from './src/paperTimelineUtils.js';
 
 function getAvatarLabel(fullName) {
   return fullName.charAt(0).toUpperCase() || '?';
@@ -172,10 +132,10 @@ export default function DailyActivityTimeline({ supabase, session, onReadMarked 
           const tooltipId = `papers-${groupedPapers[date].latestTimestamp}`;
 
         return (
-          <li key={date} className="grid grid-cols-[minmax(6rem,1fr)_minmax(0,2fr)] gap-4">
+          <li key={date} className="grid grid-cols-[minmax(4.5rem,0.8fr)_minmax(0,2fr)] gap-2 sm:grid-cols-[minmax(6rem,1fr)_minmax(0,2fr)] sm:gap-4">
             <time
               dateTime={new Date(groupedPapers[date].latestTimestamp).toISOString()}
-              className="pt-1 text-right text-sm font-medium text-slate-700"
+              className="pt-1 text-right text-xs font-medium text-slate-700 sm:text-sm"
             >
               {date}
             </time>
@@ -210,22 +170,22 @@ export default function DailyActivityTimeline({ supabase, session, onReadMarked 
                     id={tooltipId}
                     role="dialog"
                     aria-label={`Papers added on ${date}`}
-                    className="absolute left-0 top-full z-10 mt-2 w-max max-w-80 rounded-md bg-slate-900 p-2 text-sm text-white shadow-lg"
+                    className="absolute left-0 top-full z-10 mt-2 w-max max-w-[calc(100vw-2rem)] rounded-md bg-slate-900 p-2 text-sm text-white shadow-lg sm:max-w-80"
                   >
                     <ul className="space-y-1">
                       {dayPapers.map((paper) => (
                         <li key={paper.id}>
-                          <div className="flex items-center justify-between gap-2 rounded px-2 py-1.5 hover:bg-white/10">
+                          <div className="flex min-w-0 flex-col items-stretch gap-2 rounded px-2 py-2 hover:bg-white/10 sm:flex-row sm:items-center sm:justify-between sm:py-1.5">
                             <button
                               type="button"
                               onClick={() => {
                                 setSelectedPaper(paper);
                                 setActiveTooltip(null);
                               }}
-                              className="min-w-0 flex-1 text-left focus-visible:ring-2 focus-visible:ring-white"
+                              className="min-w-0 flex-1 break-words text-left focus-visible:ring-2 focus-visible:ring-white"
                             >
-                              <span className="block font-medium">{paper.title}</span>
-                              <span className="block text-xs text-slate-300">{paper.uploaderName}</span>
+                              <span className="block break-words font-medium">{paper.title}</span>
+                              <span className="block break-words text-xs text-slate-300">{paper.uploaderName}</span>
                             </button>
                             {paper.uploaded_by === session?.user?.id ? (
                               <span className="shrink-0 rounded-full bg-white/15 px-2 py-1 text-xs font-semibold text-white">
@@ -236,7 +196,7 @@ export default function DailyActivityTimeline({ supabase, session, onReadMarked 
                                 type="button"
                                 onClick={() => handleToggleRead(paper)}
                                 disabled={markingPaperIds.has(paper.id)}
-                                className="shrink-0 rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-800 disabled:opacity-60"
+                                className="min-h-10 shrink-0 self-start rounded-full bg-emerald-100 px-3 py-2 text-xs font-semibold text-emerald-800 disabled:opacity-60 sm:self-auto"
                               >
                                 ✓ Read
                               </button>
@@ -245,7 +205,7 @@ export default function DailyActivityTimeline({ supabase, session, onReadMarked 
                                 type="button"
                                 onClick={() => handleToggleRead(paper)}
                                 disabled={!session?.user?.id || markingPaperIds.has(paper.id)}
-                                className="shrink-0 rounded border border-white/40 px-2 py-1 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60"
+                                className="min-h-10 shrink-0 self-start rounded border border-white/40 px-3 py-2 text-xs font-semibold text-white hover:bg-white/10 disabled:opacity-60 sm:self-auto"
                               >
                                 {markingPaperIds.has(paper.id) ? 'Saving...' : 'Mark'}
                               </button>
@@ -276,27 +236,27 @@ export default function DailyActivityTimeline({ supabase, session, onReadMarked 
             role="dialog"
             aria-modal="true"
             aria-labelledby="timeline-paper-title"
-            className="my-auto w-full max-w-xl rounded-lg bg-white p-6 shadow-2xl sm:p-8"
+            className="my-auto w-full max-w-xl rounded-lg bg-white p-4 shadow-2xl sm:p-8"
           >
-            <div className="mb-5 flex items-start justify-between gap-4">
+            <div className="mb-5 flex items-start justify-between gap-3 sm:gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b34e35]">
                   Paper Details
                 </p>
-                <h2 id="timeline-paper-title" className="mt-2 font-serif text-2xl text-[#202724]">
+                <h2 id="timeline-paper-title" className="mt-2 break-words font-serif text-2xl text-[#202724]">
                   {selectedPaper.title}
                 </h2>
               </div>
               <button
                 type="button"
                 onClick={() => setSelectedPaper(null)}
-                className="rounded-md border border-[#cfd8d1] px-3 py-2 text-sm font-semibold text-[#303b35] transition hover:bg-[#f1f4f1]"
+                className="min-h-11 shrink-0 rounded-md border border-[#cfd8d1] px-3 py-2 text-sm font-semibold text-[#303b35] transition hover:bg-[#f1f4f1]"
               >
                 Close
               </button>
             </div>
 
-            <p className="mb-5 inline-flex rounded-full bg-[#eaf4ee] px-3 py-1.5 text-sm font-semibold text-[#176b58]">
+            <p className="mb-5 inline-flex max-w-full flex-wrap break-words rounded-full bg-[#eaf4ee] px-3 py-1.5 text-sm font-semibold text-[#176b58]">
               Translated by: {selectedPaper.uploaderName}
             </p>
             <div className="mb-6">
@@ -308,8 +268,9 @@ export default function DailyActivityTimeline({ supabase, session, onReadMarked 
             {markAsReadError && (
               <p role="alert" className="mb-4 text-sm text-red-700">{markAsReadError}</p>
             )}
+            <div className="flex flex-wrap items-center gap-3">
             {selectedPaper.uploaded_by === session?.user?.id ? (
-              <span className="mr-3 inline-flex rounded-full bg-[#f1f4f1] px-4 py-2.5 text-sm font-semibold text-[#59655f]">
+              <span className="inline-flex min-h-11 items-center rounded-full bg-[#f1f4f1] px-4 py-2.5 text-sm font-semibold text-[#59655f]">
                 Your Upload
               </span>
             ) : selectedPaper.read_by?.includes(session?.user?.id) ? (
@@ -317,7 +278,7 @@ export default function DailyActivityTimeline({ supabase, session, onReadMarked 
                 type="button"
                 onClick={() => handleToggleRead(selectedPaper)}
                 disabled={markingPaperIds.has(selectedPaper.id)}
-                className="mr-3 inline-flex cursor-not-allowed rounded-md bg-[#eaf4ee] px-4 py-2.5 text-sm font-semibold text-[#176b58]"
+                className="inline-flex min-h-11 rounded-md bg-[#eaf4ee] px-4 py-2.5 text-sm font-semibold text-[#176b58]"
               >
                 {markingPaperIds.has(selectedPaper.id) ? 'Saving...' : '✓ Read'}
               </button>
@@ -326,7 +287,7 @@ export default function DailyActivityTimeline({ supabase, session, onReadMarked 
                 type="button"
                 onClick={() => handleToggleRead(selectedPaper)}
                 disabled={markingPaperIds.has(selectedPaper.id)}
-                className="mr-3 inline-flex rounded-md border border-[#176b58] px-4 py-2.5 text-sm font-semibold text-[#176b58] transition hover:bg-[#eaf4ee]"
+                className="inline-flex min-h-11 rounded-md border border-[#176b58] px-4 py-2.5 text-sm font-semibold text-[#176b58] transition hover:bg-[#eaf4ee]"
               >
                 {markingPaperIds.has(selectedPaper.id) ? 'Saving...' : 'Mark as Read'}
               </button>
@@ -343,6 +304,7 @@ export default function DailyActivityTimeline({ supabase, session, onReadMarked 
             ) : (
               <p className="text-sm text-[#68746e]">No PDF is available for this paper.</p>
             )}
+            </div>
           </section>
         </div>
       )}

@@ -131,24 +131,24 @@ export default function PaperClaimer({ session, onReadMarked }) {
 
   if (selectedPaper) {
     return (
-      <section className="mb-8 max-w-2xl rounded-md border border-[#dce2dc] bg-white p-5 sm:p-6">
+      <section className="mb-8 w-full max-w-2xl rounded-md border border-[#dce2dc] bg-white p-4 sm:p-6">
         <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b34e35]">
               Paper Details
             </p>
-            <h2 className="mt-2 font-serif text-2xl text-[#202724]">{selectedPaper.title}</h2>
+            <h2 className="mt-2 break-words font-serif text-2xl text-[#202724]">{selectedPaper.title}</h2>
           </div>
           <button
             type="button"
             onClick={() => setSelectedPaper(null)}
-            className="rounded-md border border-[#cfd8d1] px-3 py-2 text-sm font-semibold text-[#303b35] transition hover:bg-[#f1f4f1]"
+            className="min-h-11 shrink-0 rounded-md border border-[#cfd8d1] px-3 py-2 text-sm font-semibold text-[#303b35] transition hover:bg-[#f1f4f1]"
           >
             Close
           </button>
         </div>
 
-        <p className="mb-5 inline-flex rounded-full bg-[#eaf4ee] px-3 py-1.5 text-sm font-semibold text-[#176b58]">
+        <p className="mb-5 inline-flex max-w-full flex-wrap break-words rounded-full bg-[#eaf4ee] px-3 py-1.5 text-sm font-semibold text-[#176b58]">
           Translated by: {selectedPaper.uploader}
         </p>
 
@@ -162,8 +162,9 @@ export default function PaperClaimer({ session, onReadMarked }) {
         {markAsReadError && (
           <p role="alert" className="mb-4 text-sm text-red-700">{markAsReadError}</p>
         )}
+        <div className="flex flex-wrap items-center gap-3">
         {selectedPaper.uploaded_by === session?.user?.id ? (
-          <span className="mr-3 inline-flex rounded-full bg-[#f1f4f1] px-4 py-2.5 text-sm font-semibold text-[#59655f]">
+          <span className="inline-flex min-h-11 items-center rounded-full bg-[#f1f4f1] px-4 py-2.5 text-sm font-semibold text-[#59655f]">
             Your Upload
           </span>
         ) : selectedPaper.read_by?.includes(session?.user?.id) ? (
@@ -171,7 +172,7 @@ export default function PaperClaimer({ session, onReadMarked }) {
             type="button"
             onClick={handleToggleRead}
             disabled={isMarkingAsRead}
-            className="mr-3 inline-flex rounded-md bg-[#eaf4ee] px-4 py-2.5 text-sm font-semibold text-[#176b58] disabled:opacity-60"
+            className="inline-flex min-h-11 rounded-md bg-[#eaf4ee] px-4 py-2.5 text-sm font-semibold text-[#176b58] disabled:opacity-60"
           >
             {isMarkingAsRead ? 'Saving...' : '✓ Read'}
           </button>
@@ -180,7 +181,7 @@ export default function PaperClaimer({ session, onReadMarked }) {
             type="button"
             onClick={handleToggleRead}
             disabled={isMarkingAsRead}
-            className="mr-3 inline-flex rounded-md border border-[#176b58] px-4 py-2.5 text-sm font-semibold text-[#176b58] transition hover:bg-[#eaf4ee]"
+            className="inline-flex min-h-11 rounded-md border border-[#176b58] px-4 py-2.5 text-sm font-semibold text-[#176b58] transition hover:bg-[#eaf4ee]"
           >
             {isMarkingAsRead ? 'Saving...' : 'Mark as Read'}
           </button>
@@ -190,19 +191,20 @@ export default function PaperClaimer({ session, onReadMarked }) {
             href={selectedPaper.pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex rounded-md bg-[#176b58] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#105744]"
+            className="inline-flex min-h-11 rounded-md bg-[#176b58] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#105744]"
           >
             View PDF
           </a>
         ) : (
           <p className="text-sm text-[#68746e]">No PDF is available for this paper.</p>
         )}
+        </div>
       </section>
     );
   }
 
   return (
-    <section className="mb-8 max-w-2xl" aria-labelledby="paper-check-title">
+    <section className="mb-8 w-full max-w-2xl" aria-labelledby="paper-check-title">
       <label
         id="paper-check-title"
         htmlFor="paper-title-search"
@@ -247,7 +249,7 @@ export default function PaperClaimer({ session, onReadMarked }) {
                 onClick={() => setSelectedPaper(match)}
                 className="flex w-full flex-col gap-2 px-4 py-3 text-left transition hover:bg-[#f8faf8] sm:flex-row sm:items-center sm:justify-between"
               >
-                <span className="text-sm font-medium text-[#303b35]">{match.title}</span>
+                <span className="break-words text-sm font-medium text-[#303b35]">{match.title}</span>
                 <span className="w-fit rounded-full bg-[#fff1e8] px-2.5 py-1 text-xs font-semibold text-[#9c492f]">
                   Already uploaded by {match.uploader}
                 </span>

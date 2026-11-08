@@ -239,18 +239,18 @@ export default function ProfileDrawer({
         aria-labelledby="profile-drawer-title"
         aria-hidden={!isOpen}
         inert={!isOpen}
-        className={`fixed inset-y-0 left-0 z-50 w-80 max-w-[85vw] transform overflow-y-auto bg-white px-5 py-6 shadow-xl transition-transform duration-300 ${
+        className={`fixed inset-y-0 left-0 z-50 w-full max-w-full transform overflow-y-auto bg-white px-4 py-5 shadow-xl transition-transform duration-300 sm:w-80 sm:max-w-[85vw] sm:px-5 sm:py-6 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="mb-6 flex items-center gap-4 rounded-lg bg-[#eaf4ee] p-4">
+        <div className="mb-6 flex min-w-0 items-center gap-3 rounded-lg bg-[#eaf4ee] p-3 sm:gap-4 sm:p-4">
           <div
             aria-hidden="true"
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#176b58] text-xl font-bold text-white"
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#176b58] text-xl font-bold text-white sm:h-14 sm:w-14"
           >
             {userName.charAt(0).toUpperCase() || '?'}
           </div>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="wrap-break-word text-lg font-semibold text-[#202724]">{userName}</p>
             <p className="wrap-break-word text-sm text-[#59655f]">{session?.user?.email}</p>
           </div>
@@ -260,7 +260,7 @@ export default function ProfileDrawer({
             Could not load your profile name: {profileErrorMessage}
           </p>
         )}
-        <div className="mb-6 flex items-start justify-between border-b border-[#e2e8e3] pb-5">
+        <div className="mb-6 flex items-start justify-between gap-3 border-b border-[#e2e8e3] pb-5">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#b34e35]">
               Research archive
@@ -272,13 +272,13 @@ export default function ProfileDrawer({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-[#cfd8d1] px-3 py-2 text-sm font-semibold text-[#303b35] transition hover:bg-[#f1f4f1]"
+            className="min-h-11 shrink-0 rounded-md border border-[#cfd8d1] px-4 py-2 text-sm font-semibold text-[#303b35] transition hover:bg-[#f1f4f1]"
           >
             Close
           </button>
         </div>
 
-        <div className="mb-5 grid grid-cols-2 rounded-md bg-[#f1f4f1] p-1" role="tablist" aria-label="Profile paper lists">
+        <div className="mb-5 grid grid-cols-2 gap-1 rounded-md bg-[#f1f4f1] p-1" role="tablist" aria-label="Profile paper lists">
           <button
             type="button"
             id="profile-uploads-tab"
@@ -286,7 +286,7 @@ export default function ProfileDrawer({
             aria-selected={activeTab === 'uploads'}
             aria-controls="profile-uploads-panel"
             onClick={() => setActiveTab('uploads')}
-            className={`rounded px-2 py-2 text-sm font-semibold transition ${
+            className={`min-h-11 rounded px-2 py-2 text-xs font-semibold transition sm:text-sm ${
               activeTab === 'uploads' ? 'bg-white text-[#176b58] shadow-sm' : 'text-[#59655f]'
             }`}
           >
@@ -299,7 +299,7 @@ export default function ProfileDrawer({
             aria-selected={activeTab === 'read'}
             aria-controls="profile-read-panel"
             onClick={() => setActiveTab('read')}
-            className={`rounded px-2 py-2 text-sm font-semibold transition ${
+            className={`min-h-11 rounded px-2 py-2 text-xs font-semibold transition sm:text-sm ${
               activeTab === 'read' ? 'bg-white text-[#176b58] shadow-sm' : 'text-[#59655f]'
             }`}
           >

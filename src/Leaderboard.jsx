@@ -1,27 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient.js';
-
-export function rankPaperContributors(papers) {
-  const contributorsById = papers.reduce((contributors, paper) => {
-    if (!paper.uploaded_by) return contributors;
-
-    const name = (
-      Array.isArray(paper.team_users)
-        ? paper.team_users[0]?.full_name
-        : paper.team_users?.full_name
-    )?.trim() || 'Team Member';
-    const id = paper.uploaded_by;
-    const contributor = contributors.get(id) || { id, name, paperCount: 0 };
-
-    contributor.paperCount += 1;
-    contributor.name = name;
-    contributors.set(id, contributor);
-    return contributors;
-  }, new Map());
-
-  return Array.from(contributorsById.values())
-    .sort((a, b) => b.paperCount - a.paperCount || a.name.localeCompare(b.name));
-}
+import { rankPaperContributors } from './leaderboardUtils.js';
 
 export default function Leaderboard() {
   const [contributors, setContributors] = useState([]);
@@ -90,9 +69,9 @@ export default function Leaderboard() {
             return (
               <li
                 key={contributor.id}
-                className={`flex items-center justify-between gap-4 py-3 ${isFirst ? 'text-amber-800' : 'text-[#303b35]'}`}
+                className={`flex flex-col items-start gap-2 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-3 ${isFirst ? 'text-amber-800' : 'text-[#303b35]'}`}
               >
-                <div className="flex min-w-0 items-center gap-3">
+                <div className="flex w-full min-w-0 flex-wrap items-center gap-2 sm:gap-3">
                   <span
                     aria-label={`Rank ${index + 1}`}
                     className={`grid h-8 w-8 shrink-0 place-items-center rounded-full text-sm font-bold ${
@@ -101,16 +80,16 @@ export default function Leaderboard() {
                   >
                     {index + 1}
                   </span>
-                  <span className={`truncate text-sm font-semibold ${isFirst ? 'text-amber-800' : ''}`}>
+                  <span className={`min-w-0 break-words text-sm font-semibold ${isFirst ? 'text-amber-800' : ''}`}>
                     {contributor.name}
                   </span>
                   {isFirst && (
-                    <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-amber-700">
+                    <span className="rounded-full bg-amber-50 px-2 py-1 text-[0.65rem] font-semibold uppercase tracking-wide text-amber-700">
                       Top contributor
                     </span>
                   )}
                 </div>
-                <span className="shrink-0 text-sm text-[#68746e]">
+                <span className="self-start text-sm text-[#68746e] sm:shrink-0 sm:self-auto">
                   {contributor.paperCount} {contributor.paperCount === 1 ? 'paper' : 'papers'}
                 </span>
               </li>

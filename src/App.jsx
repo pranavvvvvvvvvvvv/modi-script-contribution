@@ -68,35 +68,35 @@ export default function App() {
   return (
     <main className="min-h-screen bg-[#f6f7f4] text-[#202724]">
       <header className="border-b border-[#dce2dc] bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-5 sm:px-8">
-          <a href="/" className="flex items-center gap-3" aria-label="Research archive home">
+        <div className="mx-auto flex max-w-5xl flex-col gap-4 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-5">
+          <a href="/" className="flex min-w-0 items-center gap-3" aria-label="Research archive home">
             <span className="grid h-9 w-9 place-items-center rounded-lg bg-[#176b58] text-sm font-bold text-white">
               R
             </span>
-            <span className="text-sm font-semibold tracking-wide">RESEARCH ARCHIVE</span>
+            <span className="truncate text-sm font-semibold tracking-wide">RESEARCH ARCHIVE</span>
           </a>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <span className="hidden text-xs font-medium uppercase tracking-wider text-[#68746e] sm:inline">
               Shared library
             </span>
             <button
               type="button"
               onClick={() => setIsUploadOpen(true)}
-              className="rounded-md bg-[#176b58] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#105744]"
+              className="min-h-11 flex-1 rounded-md bg-[#176b58] px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-[#105744] sm:flex-none sm:px-4"
             >
               Upload paper
             </button>
             <button
               type="button"
               onClick={() => setIsProfileOpen(true)}
-              className="rounded-md border border-[#cfd8d1] px-4 py-2.5 text-sm font-semibold text-[#303b35] transition hover:bg-[#f1f4f1]"
+              className="min-h-11 flex-1 rounded-md border border-[#cfd8d1] px-3 py-2.5 text-sm font-semibold text-[#303b35] transition hover:bg-[#f1f4f1] sm:flex-none sm:px-4"
             >
               My Profile
             </button>
             <button
               type="button"
               onClick={handleSignOut}
-              className="rounded-md border border-[#cfd8d1] px-4 py-2.5 text-sm font-semibold text-[#303b35] transition hover:bg-[#f1f4f1]"
+              className="min-h-11 flex-1 rounded-md border border-[#cfd8d1] px-3 py-2.5 text-sm font-semibold text-[#303b35] transition hover:bg-[#f1f4f1] sm:flex-none sm:px-4"
             >
               Sign Out
             </button>
@@ -104,7 +104,7 @@ export default function App() {
         </div>
       </header>
 
-      <section className="mx-auto max-w-5xl px-5 pb-16 pt-12 sm:px-8 sm:pt-16">
+      <section className="mx-auto w-full max-w-5xl px-4 pb-12 pt-8 sm:px-8 sm:pb-16 sm:pt-16">
         {authError && (
           <p role="alert" className="mb-6 rounded-md bg-red-50 px-3 py-2 text-sm text-red-800">
             {authError}
